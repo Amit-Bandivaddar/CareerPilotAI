@@ -4,6 +4,7 @@ import com.amit.careerpilotai.entity.User;
 import com.amit.careerpilotai.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UserService {
@@ -11,14 +12,18 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public User registerUser(User user) {
 
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new RuntimeException("Email already exists!");
         }
 
-        return userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        return userRepository.save(user);
     }
     public User loginUser(String email, String password) {
 
@@ -28,7 +33,7 @@ public class UserService {
             throw new RuntimeException("User not found!");
         }
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid Password!");
         }
 
