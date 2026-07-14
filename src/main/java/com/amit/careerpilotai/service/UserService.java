@@ -5,6 +5,8 @@ import com.amit.careerpilotai.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.amit.careerpilotai.util.JwtUtil;
+import com.amit.careerpilotai.dto.LoginResponse;
 
 @Service
 public class UserService {
@@ -14,6 +16,9 @@ public class UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public User registerUser(User user) {
 
@@ -25,7 +30,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
-    public User loginUser(String email, String password) {
+    public LoginResponse loginUser(String email, String password) {
 
         User user = userRepository.findByEmail(email);
 
@@ -37,7 +42,9 @@ public class UserService {
             throw new RuntimeException("Invalid Password!");
         }
 
-        return user;
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return new LoginResponse(token);
     }
 
 }
