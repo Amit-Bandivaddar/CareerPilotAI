@@ -1,5 +1,6 @@
 package com.amit.careerpilotai.service;
 
+import com.amit.careerpilotai.dto.UpdateProfileRequest;
 import com.amit.careerpilotai.entity.User;
 import com.amit.careerpilotai.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,16 @@ public class UserService {
         String token = jwtUtil.generateToken(user.getEmail());
 
         return new LoginResponse(token);
+    }
+    public User updateProfile(Long id, UpdateProfileRequest request) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setFullName(request.getFullName());
+        user.setCareerGoal(request.getCareerGoal());
+
+        return userRepository.save(user);
     }
 
 }
