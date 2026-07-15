@@ -23,4 +23,8 @@ public class UserController {
         return userService.loginUser(user.getEmail(), user.getPassword());
 
     }
+    @GetMapping("/profile")
+    public String profile() {
+        return "Welcome Amit! JWT Authentication Successful.";
+    }
 }
