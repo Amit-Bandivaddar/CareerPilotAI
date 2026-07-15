@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.amit.careerpilotai.util.JwtUtil;
 import com.amit.careerpilotai.dto.LoginResponse;
+import java.io.IOException;
 
 @Service
 public class UserService {
@@ -20,6 +21,12 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private GeminiService geminiService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     public User registerUser(User user) {
 
@@ -57,5 +64,23 @@ public class UserService {
 
         return userRepository.save(user);
     }
+    public void saveResumePath(Long id, String resumePath) {
 
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setResumePath(resumePath);
+
+        userRepository.save(user);
+    }
+    public String analyzeResume(Long id) throws IOException {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String resumeText =
+                fileStorageService.readResume(user.getResumePath());
+
+        return geminiService.analyzeResume(resumeText);
+    }
 }

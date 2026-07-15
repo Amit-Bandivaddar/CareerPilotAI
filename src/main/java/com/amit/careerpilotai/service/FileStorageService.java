@@ -5,6 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 @Service
 public class FileStorageService {
@@ -26,6 +29,17 @@ public class FileStorageService {
 
         file.transferTo(destination);
 
-        return fileName;
+        return destination.getAbsolutePath();
+    }
+    public String readResume(String filePath) throws IOException {
+
+        File file = new File(filePath);
+
+        try (PDDocument document = Loader.loadPDF(file)) {
+
+            PDFTextStripper stripper = new PDFTextStripper();
+
+            return stripper.getText(document);
+        }
     }
 }
