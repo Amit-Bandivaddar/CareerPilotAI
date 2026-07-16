@@ -1,17 +1,15 @@
 package com.amit.careerpilotai.controller;
 
-import com.amit.careerpilotai.dto.LoginResponse;
-import com.amit.careerpilotai.dto.ResumeFeedback;
-import com.amit.careerpilotai.dto.UpdateProfileRequest;
+import com.amit.careerpilotai.dto.*;
 import com.amit.careerpilotai.entity.User;
 import com.amit.careerpilotai.service.FileStorageService;
 import com.amit.careerpilotai.service.ResumeAnalysisService;
 import com.amit.careerpilotai.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import com.amit.careerpilotai.dto.InterviewQuestionsResponse;
 
 @RestController
 @RequestMapping("/api/users")
@@ -67,10 +65,99 @@ public class UserController {
 
         return userService.analyzeResume(id);
     }
+
     @GetMapping("/interview-questions/{id}")
     public InterviewQuestionsResponse interviewQuestions(@PathVariable Long id)
             throws IOException {
 
         return userService.generateInterviewQuestions(id);
+    }
+
+    @GetMapping("/skill-gap/{id}")
+    public ResponseEntity<String> skillGap(
+            @PathVariable Long id,
+            @RequestParam String role) throws IOException {
+
+        return ResponseEntity.ok(
+                userService.analyzeSkillGap(id, role)
+        );
+    }
+
+    @GetMapping("/career-roadmap/{id}")
+    public ResponseEntity<String> careerRoadmap(
+            @PathVariable Long id,
+            @RequestParam String goal) throws IOException {
+
+        return ResponseEntity.ok(
+                userService.generateCareerRoadmap(id, goal)
+        );
+    }
+
+    @GetMapping("/cover-letter/{id}")
+    public ResponseEntity<String> generateCoverLetter(
+            @PathVariable Long id,
+            @RequestParam String company,
+            @RequestParam String role) throws IOException {
+
+        return ResponseEntity.ok(
+                userService.generateCoverLetter(
+                        id,
+                        company,
+                        role
+                )
+        );
+    }
+    @GetMapping("/resume-improvement/{id}")
+    public ResponseEntity<String> resumeImprovement(
+            @PathVariable Long id) throws IOException {
+
+        return ResponseEntity.ok(
+                userService.improveResume(id)
+        );
+    }
+    @GetMapping("/ats-score/{id}")
+    public ResponseEntity<String> atsScore(
+            @PathVariable Long id) throws IOException {
+
+        return ResponseEntity.ok(
+                userService.generateATSScore(id)
+        );
+    }
+    @PostMapping("/job-match/{id}")
+    public ResponseEntity<String> jobMatch(
+            @PathVariable Long id,
+            @RequestBody JobMatchRequest request)
+            throws IOException {
+
+        return ResponseEntity.ok(
+                userService.matchJobDescription(
+                        id,
+                        request.getJobDescription()
+                )
+        );
+    }
+    @GetMapping("/linkedin-summary/{id}")
+    public ResponseEntity<String> linkedInSummary(
+            @PathVariable Long id)
+            throws IOException {
+
+        return ResponseEntity.ok(
+                userService.generateLinkedInSummary(id)
+        );
+    }
+    @GetMapping("/hr-email/{id}")
+    public ResponseEntity<String> hrEmail(
+            @PathVariable Long id,
+            @RequestParam String company,
+            @RequestParam String role)
+            throws IOException {
+
+        return ResponseEntity.ok(
+                userService.generateHREmail(
+                        id,
+                        company,
+                        role
+                )
+        );
     }
 }

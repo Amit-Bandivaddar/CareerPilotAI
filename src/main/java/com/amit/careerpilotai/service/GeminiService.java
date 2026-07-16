@@ -49,12 +49,21 @@ public class GeminiService {
                     && response.getCandidates() != null
                     && !response.getCandidates().isEmpty()) {
 
-                return response.getCandidates()
+                String result = response.getCandidates()
                         .get(0)
                         .getContent()
                         .getParts()
                         .get(0)
                         .getText();
+                result = result
+                        .replaceAll("(?m)^## ", "\n## ")
+                        .replaceAll("(?m)^# ", "\n# ")
+                        .replaceAll("(?m)^\\*\\*", "\n**")
+                        .trim();
+
+                return result;
+
+
             }
 
             return "No response received from Gemini.";
@@ -81,18 +90,55 @@ public class GeminiService {
     public String analyzeResume(String resumeText) {
 
         String prompt = """
-                You are an expert ATS Resume Reviewer.
+You are an expert ATS Resume Reviewer.
 
-                Analyze the following resume and provide:
+Analyze the resume and return the response in VALID MARKDOWN.
 
-                1. Resume Score out of 100
-                2. Strengths
-                3. Missing Skills
-                4. Suggestions for Improvement
-                5. Best Suitable Job Role
+Formatting Rules:
 
-                Resume:
-                """
+- Use '#' for headings.
+- Use '##' for subheadings.
+- Use '-' for bullet points.
+- Leave one blank line after every heading.
+- Leave one blank line between sections.
+- Do NOT merge words together.
+- Keep paragraphs short.
+- Use bold text for important values.
+- Make the response look professional.
+
+Return EXACTLY in this structure:
+
+# Resume Score
+
+**Score:** XX/100
+
+# Strengths
+
+- Point 1
+- Point 2
+- Point 3
+
+# Missing Skills
+
+- Skill 1
+- Skill 2
+- Skill 3
+
+# Suggestions
+
+- Suggestion 1
+- Suggestion 2
+- Suggestion 3
+
+# Best Suitable Roles
+
+- Role 1
+- Role 2
+- Role 3
+
+Resume:
+
+"""
                 + resumeText;
 
         return askGemini(prompt);
