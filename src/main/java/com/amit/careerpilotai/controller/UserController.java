@@ -10,8 +10,8 @@ import com.amit.careerpilotai.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
+import com.amit.careerpilotai.dto.InterviewQuestionsResponse;
 
 @RestController
 @RequestMapping("/api/users")
@@ -66,5 +66,11 @@ public class UserController {
     public String analyzeResume(@PathVariable Long id) throws IOException {
 
         return userService.analyzeResume(id);
+    }
+    @GetMapping("/interview-questions/{id}")
+    public InterviewQuestionsResponse interviewQuestions(@PathVariable Long id)
+            throws IOException {
+
+        return userService.generateInterviewQuestions(id);
     }
 }

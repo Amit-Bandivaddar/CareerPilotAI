@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.amit.careerpilotai.util.JwtUtil;
 import com.amit.careerpilotai.dto.LoginResponse;
 import java.io.IOException;
+import com.amit.careerpilotai.dto.InterviewQuestionsResponse;
 
 @Service
 public class UserService {
@@ -27,6 +28,9 @@ public class UserService {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private InterviewQuestionService interviewQuestionService;
 
     public User registerUser(User user) {
 
@@ -82,5 +86,15 @@ public class UserService {
                 fileStorageService.readResume(user.getResumePath());
 
         return geminiService.analyzeResume(resumeText);
+    }
+    public InterviewQuestionsResponse generateInterviewQuestions(Long id) throws IOException {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String resumeText =
+                fileStorageService.readResume(user.getResumePath());
+
+        return interviewQuestionService.generateQuestions(resumeText);
     }
 }
