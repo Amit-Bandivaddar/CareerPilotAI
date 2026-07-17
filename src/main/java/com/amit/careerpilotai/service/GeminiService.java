@@ -8,14 +8,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class GeminiService {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(GeminiService.class);
 
     @Value("${gemini.api.key}")
     private String apiKey;
 
     private final WebClient webClient = WebClient.builder().build();
+
 
     // Generic method for sending any prompt to Gemini
     public String askGemini(String prompt) {
@@ -23,7 +29,7 @@ public class GeminiService {
         try {
 
             // Print API Key (only first 10 characters)
-            System.out.println("API Key Starts With: " + apiKey.substring(0, 10));
+            log.info("Sending request to Gemini API.");
 
             GeminiRequest.Part part =
                     new GeminiRequest.Part(prompt);
@@ -69,6 +75,8 @@ public class GeminiService {
             return "No response received from Gemini.";
 
         } catch (Exception e) {
+
+            log.error("Error while calling Gemini API", e);
 
             return """
                 AI Service is currently unavailable.
