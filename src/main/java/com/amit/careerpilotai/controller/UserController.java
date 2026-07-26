@@ -67,10 +67,14 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody User user) {
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request) {
 
         LoginResponse response =
-                userService.loginUser(user.getEmail(), user.getPassword());
+                userService.loginUser(
+                        request.getEmail(),
+                        request.getPassword()
+                );
 
         return ResponseEntity.ok(response);
     }

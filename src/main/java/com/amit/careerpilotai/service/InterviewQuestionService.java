@@ -1,10 +1,9 @@
 package com.amit.careerpilotai.service;
 
 import com.amit.careerpilotai.dto.InterviewQuestionsResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Service
 public class InterviewQuestionService {
@@ -12,25 +11,29 @@ public class InterviewQuestionService {
     @Autowired
     private GeminiService geminiService;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public InterviewQuestionsResponse generateQuestions(String resumeText) {
 
-        String prompt =
-                """
-                You are a technical interviewer.
+        try {
 
-                Read the following resume.
+            String response =
+                    geminiService.generateInterviewQuestions(resumeText);
 
-                Generate exactly 10 interview questions based only on the candidate's skills, projects and technologies.
+            return objectMapper.readValue(
+                    response,
+                    InterviewQuestionsResponse.class
+            );
 
-                Return only the questions, one per line.
+        } catch (Exception e) {
 
-                Resume:
-                """ + resumeText;
+            throw new RuntimeException(
+                    "Failed to parse interview questions.",
+                    e
+            );
 
-        String response = geminiService.askGemini(prompt);
+        }
 
-        return new InterviewQuestionsResponse(
-                Arrays.asList(response.split("\n"))
-        );
     }
+
 }

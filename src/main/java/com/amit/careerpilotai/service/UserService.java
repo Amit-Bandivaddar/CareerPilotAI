@@ -82,7 +82,12 @@ public class UserService {
 
         String token = jwtUtil.generateToken(user.getEmail());
 
-        return new LoginResponse(token);
+        return new LoginResponse(
+                token,
+                user.getId(),
+                user.getFullName(),
+                user.getEmail()
+        );
     }
 
     public User updateProfile(Long id, UpdateProfileRequest request) {

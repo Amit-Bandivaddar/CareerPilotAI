@@ -151,4 +151,44 @@ Resume:
 
         return askGemini(prompt);
     }
+    public String generateInterviewQuestions(String resumeText) {
+
+        String prompt = """
+You are an experienced technical interviewer.
+
+Based on the following resume, generate exactly 10 interview questions.
+
+Return ONLY valid JSON.
+
+The response format MUST be:
+
+{
+  "questions": [
+    "Question 1",
+    "Question 2",
+    "Question 3",
+    "Question 4",
+    "Question 5",
+    "Question 6",
+    "Question 7",
+    "Question 8",
+    "Question 9",
+    "Question 10"
+  ]
+}
+
+Rules:
+- Return ONLY JSON.
+- Do not use markdown.
+- Do not write explanations.
+- Do not write answers.
+- Do not wrap the JSON inside ```json.
+- The output must be valid JSON.
+
+Resume:
+
+""" + resumeText;
+
+        return askGemini(prompt);
+    }
 }
