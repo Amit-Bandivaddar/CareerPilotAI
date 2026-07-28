@@ -152,3 +152,28 @@ CareerPilotAI/
 
 └── README.md
 
+
+
+## 📸 Project Screenshots
+
+### 🔐 Login
+![Login](screenshots/Login.png)
+
+### 📝 Register
+![Register](screenshots/Register.png)
+
+### 📊 Dashboard
+![Dashboard](screenshots/Dashbord.png)
+
+### 📄 Upload Resume
+![Upload Resume](screenshots/Upload_Resume.png)
+
+### 🧠 Interview Questions
+![Interview Questions](screenshots/Interview_Questions.png)
+
+### 🗺️ Career Roadmap
+![Career Roadmap](screenshots/Career_RoadMap.png)
+
+### 📧 HR Email Generator
+![HR Email Generator](screenshots/HR_Email_Generator.png)
+
