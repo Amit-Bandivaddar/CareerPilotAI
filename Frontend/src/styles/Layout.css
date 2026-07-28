@@ -1,0 +1,19 @@
+.layout{
+
+    display:flex;
+
+    min-height:100vh;
+
+    background:#f4f7fb;
+
+}
+
+.page-content{
+
+    margin-left:300px;
+
+    width:100%;
+
+    padding:40px;
+
+}
